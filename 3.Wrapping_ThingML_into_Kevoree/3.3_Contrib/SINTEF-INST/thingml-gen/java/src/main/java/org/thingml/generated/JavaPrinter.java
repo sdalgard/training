@@ -10,6 +10,7 @@ package org.thingml.generated;
 import org.thingml.java.*;
 import org.thingml.java.ext.*;
 
+import org.thingml.generated.api.*;
 import org.thingml.generated.messages.*;
 
 import java.util.*;
@@ -17,7 +18,17 @@ import java.util.*;
 /**
  * Definition for type : JavaPrinter
  **/
-public class JavaPrinter extends Component  {
+public class JavaPrinter extends Component implements IJavaPrinter_Print {
+
+@Override
+public synchronized void customPrintS_via_Print(String CustomPrintMsgs_customPrintS_myString__var){
+receive(customPrintSType.instantiate(Print_port, CustomPrintMsgs_customPrintS_myString__var), Print_port);
+}
+
+@Override
+public synchronized void customPrintI_via_Print(short CustomPrintMsgs_customPrintI_myInt__var){
+receive(customPrintIType.instantiate(Print_port, CustomPrintMsgs_customPrintI_myInt__var), Print_port);
+}
 
 //Attributes
 //Ports
@@ -55,7 +66,7 @@ final AtomicState state_JavaPrinter_behavior_greetings = new AtomicState("greeti
 states_JavaPrinter_behavior.add(state_JavaPrinter_behavior_greetings);
 final List<Region> regions_JavaPrinter_behavior = new ArrayList<Region>();
 final List<Handler> transitions_JavaPrinter_behavior = new ArrayList<Handler>();
-transitions_JavaPrinter_behavior.add(new InternalTransition("Handler_15485976",customPrintSType, Print_port, state_JavaPrinter_behavior_greetings){
+transitions_JavaPrinter_behavior.add(new InternalTransition("Handler_13201065",customPrintSType, Print_port, state_JavaPrinter_behavior_greetings){
 @Override
 public void doExecute(final Event e) {
 final CustomPrintSMessageType.CustomPrintSMessage ce = (CustomPrintSMessageType.CustomPrintSMessage) e;
@@ -63,7 +74,7 @@ System.out.print(ce.myString);
 }
 
 });
-transitions_JavaPrinter_behavior.add(new InternalTransition("Handler_27893946",customPrintIType, Print_port, state_JavaPrinter_behavior_greetings){
+transitions_JavaPrinter_behavior.add(new InternalTransition("Handler_7101286",customPrintIType, Print_port, state_JavaPrinter_behavior_greetings){
 @Override
 public void doExecute(final Event e) {
 final CustomPrintIMessageType.CustomPrintIMessage ce = (CustomPrintIMessageType.CustomPrintIMessage) e;

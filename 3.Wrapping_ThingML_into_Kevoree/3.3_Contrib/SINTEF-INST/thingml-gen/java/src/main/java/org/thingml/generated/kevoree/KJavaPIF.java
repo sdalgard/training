@@ -27,17 +27,15 @@ private JavaPrinter JavaPrinter_JavaPIF_printer;
 private TimerJava TimerJava_JavaPIF_timer;
 //Output ports (dangling ports in the ThingML configuration)
 @Output
-private org.kevoree.api.Port JavaPIF_ender_to_starterPort_out;
-@Output
 private org.kevoree.api.Port JavaPIF_starter_to_enderPort_out;
+@Output
+private org.kevoree.api.Port JavaPIF_ender_to_starterPort_out;
 @Input
 public void JavaPIF_ender_from_starterPort(String string) {
-	System.err.println("JavaPIF_ender_from_starterPort() got : <" + string + ">");
 final JsonObject json = JsonObject.readFrom(string);
 //if (json.get("port").asString().equals("from_starter_c")) {
 if (json.get("message").asString().equals("pif_token")) {
 final Event msg = PIFEnder_JavaPIF_ender.getPif_tokenType().instantiate(PIFEnder_JavaPIF_ender.getFrom_starter_port(), (short) json.get("token").asInt());
-	System.err.println("JavaPIF_ender_from_starterPort() calls PIFEnder_JavaPIF_ender.receive()");
 PIFEnder_JavaPIF_ender.receive(msg, PIFEnder_JavaPIF_ender.getFrom_starter_port());
 }
 //}
@@ -45,12 +43,10 @@ PIFEnder_JavaPIF_ender.receive(msg, PIFEnder_JavaPIF_ender.getFrom_starter_port(
 
 @Input
 public void JavaPIF_starter_from_enderPort(String string) {
-	System.err.println("JavaPIF_starter_from_enderPort() got : <" + string + ">");
 final JsonObject json = JsonObject.readFrom(string);
 //if (json.get("port").asString().equals("from_ender_c")) {
 if (json.get("message").asString().equals("pif_token")) {
 final Event msg = PIFStarter_JavaPIF_starter.getPif_tokenType().instantiate(PIFStarter_JavaPIF_starter.getFrom_ender_port(), (short) json.get("token").asInt());
-	System.err.println("JavaPIF_starter_from_enderPort() calls PIFStarter_JavaPIF_starter.receive()");
 PIFStarter_JavaPIF_starter.receive(msg, PIFStarter_JavaPIF_starter.getFrom_ender_port());
 }
 //}
@@ -70,32 +66,18 @@ initThingML();
 private void initThingML() {
 //Things
 PIFEnder_JavaPIF_ender = (PIFEnder) new PIFEnder("JavaPIF_ender: PIFEnder", (short)0).buildBehavior();
-JavaPrinter_JavaPIF_printer = (JavaPrinter) new JavaPrinter("JavaPIF_printer: JavaPrinter").buildBehavior();
-TimerJava_JavaPIF_timer = (TimerJava) new TimerJava("JavaPIF_timer: TimerJava", (Thread)null).buildBehavior();
 PIFStarter_JavaPIF_starter = (PIFStarter) new PIFStarter("JavaPIF_starter: PIFStarter", (short)5000).buildBehavior();
+TimerJava_JavaPIF_timer = (TimerJava) new TimerJava("JavaPIF_timer: TimerJava", (Thread)null).buildBehavior();
+JavaPrinter_JavaPIF_printer = (JavaPrinter) new JavaPrinter("JavaPIF_printer: JavaPrinter").buildBehavior();
 //Connectors
+new Connector(PIFStarter_JavaPIF_starter.getTimer_port(), TimerJava_JavaPIF_timer.getTimer_port(), PIFStarter_JavaPIF_starter, TimerJava_JavaPIF_timer);
 new Connector(JavaPrinter_JavaPIF_printer.getPrint_port(), PIFEnder_JavaPIF_ender.getPrint_port(), JavaPrinter_JavaPIF_printer, PIFEnder_JavaPIF_ender);
 new Connector(JavaPrinter_JavaPIF_printer.getPrint_port(), PIFStarter_JavaPIF_starter.getPrint_port(), JavaPrinter_JavaPIF_printer, PIFStarter_JavaPIF_starter);
-new Connector(PIFStarter_JavaPIF_starter.getTimer_port(), TimerJava_JavaPIF_timer.getTimer_port(), PIFStarter_JavaPIF_starter, TimerJava_JavaPIF_timer);
-final IPIFStarter_to_enderClient JavaPIF_starter_to_ender_listener = new IPIFStarter_to_enderClient(){
-@Override
-public void pif_token_from_to_ender(short PrintIncForwardMsgs_pif_token_token__var) {
-final String msg = "{\"message\":\"pif_token\",\"port\":\"to_ender_c\", \"token\":" + PrintIncForwardMsgs_pif_token_token__var + "}";
-try {
-	System.err.println("JavaPIF_starter_to_enderPort_out.send(" + msg + ")");
-JavaPIF_starter_to_enderPort_out.send(msg, null);
-} catch(NullPointerException npe) {
-Log.warn("Port JavaPIF_starter_to_enderPort_out is not connected.\nMessage " + msg + " has been lost.\nConnect a channel (and maybe restart your component JavaPIF)");
-}
-}
-};
-PIFStarter_JavaPIF_starter.registerOnTo_ender(JavaPIF_starter_to_ender_listener);
 final IPIFEnder_to_starterClient JavaPIF_ender_to_starter_listener = new IPIFEnder_to_starterClient(){
 @Override
 public void pif_token_from_to_starter(short PrintIncForwardMsgs_pif_token_token__var) {
 final String msg = "{\"message\":\"pif_token\",\"port\":\"to_starter_c\", \"token\":" + PrintIncForwardMsgs_pif_token_token__var + "}";
 try {
-	System.err.println("JavaPIF_ender_to_starterPort_out.send(" + msg + ")");
 JavaPIF_ender_to_starterPort_out.send(msg, null);
 } catch(NullPointerException npe) {
 Log.warn("Port JavaPIF_ender_to_starterPort_out is not connected.\nMessage " + msg + " has been lost.\nConnect a channel (and maybe restart your component JavaPIF)");
@@ -103,6 +85,18 @@ Log.warn("Port JavaPIF_ender_to_starterPort_out is not connected.\nMessage " + m
 }
 };
 PIFEnder_JavaPIF_ender.registerOnTo_starter(JavaPIF_ender_to_starter_listener);
+final IPIFStarter_to_enderClient JavaPIF_starter_to_ender_listener = new IPIFStarter_to_enderClient(){
+@Override
+public void pif_token_from_to_ender(short PrintIncForwardMsgs_pif_token_token__var) {
+final String msg = "{\"message\":\"pif_token\",\"port\":\"to_ender_c\", \"token\":" + PrintIncForwardMsgs_pif_token_token__var + "}";
+try {
+JavaPIF_starter_to_enderPort_out.send(msg, null);
+} catch(NullPointerException npe) {
+Log.warn("Port JavaPIF_starter_to_enderPort_out is not connected.\nMessage " + msg + " has been lost.\nConnect a channel (and maybe restart your component JavaPIF)");
+}
+}
+};
+PIFStarter_JavaPIF_starter.registerOnTo_ender(JavaPIF_starter_to_ender_listener);
 }
 
 @Start
@@ -113,15 +107,15 @@ TimerJava_JavaPIF_timer.init();
 PIFEnder_JavaPIF_ender.init();
 TimerJava_JavaPIF_timer.start();
 JavaPrinter_JavaPIF_printer.start();
-PIFEnder_JavaPIF_ender.start();
 PIFStarter_JavaPIF_starter.start();
+PIFEnder_JavaPIF_ender.start();
 }
 
 @Stop
-public void stopComponent() {PIFStarter_JavaPIF_starter.stop();
-JavaPrinter_JavaPIF_printer.stop();
-TimerJava_JavaPIF_timer.stop();
+public void stopComponent() {JavaPrinter_JavaPIF_printer.stop();
 PIFEnder_JavaPIF_ender.stop();
+TimerJava_JavaPIF_timer.stop();
+PIFStarter_JavaPIF_starter.stop();
 }
 
 }

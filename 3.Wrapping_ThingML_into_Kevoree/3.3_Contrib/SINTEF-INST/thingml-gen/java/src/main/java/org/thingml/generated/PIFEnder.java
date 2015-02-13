@@ -29,6 +29,15 @@ public synchronized void unregisterFromTo_starter(IPIFEnder_to_starterClient cli
 to_starter_clients.remove(client);
 }
 
+private Collection<IPIFEnder_PrintClient> Print_clients = Collections.synchronizedCollection(new LinkedList<IPIFEnder_PrintClient>());
+public synchronized void registerOnPrint(IPIFEnder_PrintClient client){
+Print_clients.add(client);
+}
+
+public synchronized void unregisterFromPrint(IPIFEnder_PrintClient client){
+Print_clients.remove(client);
+}
+
 @Override
 public synchronized void pif_token_via_from_starter(short PrintIncForwardMsgs_pif_token_token__var){
 receive(pif_tokenType.instantiate(from_starter_port, PrintIncForwardMsgs_pif_token_token__var), from_starter_port);
@@ -45,12 +54,18 @@ client.pif_token_from_to_starter(PrintIncForwardMsgs_pif_token_token__var);
 private void sendCustomPrintS_via_Print(String CustomPrintMsgs_customPrintS_myString__var){
 //ThingML send
 send(customPrintSType.instantiate(Print_port, CustomPrintMsgs_customPrintS_myString__var), Print_port);
-}
+//send to other clients
+for(IPIFEnder_PrintClient client : Print_clients){
+client.customPrintS_from_Print(CustomPrintMsgs_customPrintS_myString__var);
+}}
 
 private void sendCustomPrintI_via_Print(short CustomPrintMsgs_customPrintI_myInt__var){
 //ThingML send
 send(customPrintIType.instantiate(Print_port, CustomPrintMsgs_customPrintI_myInt__var), Print_port);
-}
+//send to other clients
+for(IPIFEnder_PrintClient client : Print_clients){
+client.customPrintI_from_Print(CustomPrintMsgs_customPrintI_myInt__var);
+}}
 
 //Attributes
 private short PIFEnder_behavior_tmp__var;
@@ -117,7 +132,7 @@ sendCustomPrintS_via_Print((String) ("Ender entry Init ... "));
 states_PIFEnder_behavior.add(state_PIFEnder_behavior_Init);
 final List<Region> regions_PIFEnder_behavior = new ArrayList<Region>();
 final List<Handler> transitions_PIFEnder_behavior = new ArrayList<Handler>();
-transitions_PIFEnder_behavior.add(new Transition("Handler_25254386",pif_tokenType, from_starter_port, state_PIFEnder_behavior_Init, state_PIFEnder_behavior_Init){
+transitions_PIFEnder_behavior.add(new Transition("Handler_22710652",pif_tokenType, from_starter_port, state_PIFEnder_behavior_Init, state_PIFEnder_behavior_Init){
 @Override
 public void doExecute(final Event e) {
 final Pif_tokenMessageType.Pif_tokenMessage ce = (Pif_tokenMessageType.Pif_tokenMessage) e;

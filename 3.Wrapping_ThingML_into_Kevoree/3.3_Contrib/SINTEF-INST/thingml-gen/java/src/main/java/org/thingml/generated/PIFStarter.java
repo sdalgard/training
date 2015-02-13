@@ -18,7 +18,16 @@ import java.util.*;
 /**
  * Definition for type : PIFStarter
  **/
-public class PIFStarter extends Component implements IPIFStarter_from_ender {
+public class PIFStarter extends Component implements IPIFStarter_timer, IPIFStarter_from_ender {
+
+private Collection<IPIFStarter_timerClient> timer_clients = Collections.synchronizedCollection(new LinkedList<IPIFStarter_timerClient>());
+public synchronized void registerOnTimer(IPIFStarter_timerClient client){
+timer_clients.add(client);
+}
+
+public synchronized void unregisterFromTimer(IPIFStarter_timerClient client){
+timer_clients.remove(client);
+}
 
 private Collection<IPIFStarter_to_enderClient> to_ender_clients = Collections.synchronizedCollection(new LinkedList<IPIFStarter_to_enderClient>());
 public synchronized void registerOnTo_ender(IPIFStarter_to_enderClient client){
@@ -29,6 +38,20 @@ public synchronized void unregisterFromTo_ender(IPIFStarter_to_enderClient clien
 to_ender_clients.remove(client);
 }
 
+private Collection<IPIFStarter_PrintClient> Print_clients = Collections.synchronizedCollection(new LinkedList<IPIFStarter_PrintClient>());
+public synchronized void registerOnPrint(IPIFStarter_PrintClient client){
+Print_clients.add(client);
+}
+
+public synchronized void unregisterFromPrint(IPIFStarter_PrintClient client){
+Print_clients.remove(client);
+}
+
+@Override
+public synchronized void timer_timeout_via_timer(){
+receive(timer_timeoutType.instantiate(timer_port), timer_port);
+}
+
 @Override
 public synchronized void pif_token_via_from_ender(short PrintIncForwardMsgs_pif_token_token__var){
 receive(pif_tokenType.instantiate(from_ender_port, PrintIncForwardMsgs_pif_token_token__var), from_ender_port);
@@ -37,12 +60,18 @@ receive(pif_tokenType.instantiate(from_ender_port, PrintIncForwardMsgs_pif_token
 private void sendTimer_start_via_timer(short TimerMsgs_timer_start_delay__var){
 //ThingML send
 send(timer_startType.instantiate(timer_port, TimerMsgs_timer_start_delay__var), timer_port);
-}
+//send to other clients
+for(IPIFStarter_timerClient client : timer_clients){
+client.timer_start_from_timer(TimerMsgs_timer_start_delay__var);
+}}
 
 private void sendTimer_cancel_via_timer(){
 //ThingML send
 send(timer_cancelType.instantiate(timer_port), timer_port);
-}
+//send to other clients
+for(IPIFStarter_timerClient client : timer_clients){
+client.timer_cancel_from_timer();
+}}
 
 private void sendPif_token_via_to_ender(short PrintIncForwardMsgs_pif_token_token__var){
 //ThingML send
@@ -55,12 +84,18 @@ client.pif_token_from_to_ender(PrintIncForwardMsgs_pif_token_token__var);
 private void sendCustomPrintS_via_Print(String CustomPrintMsgs_customPrintS_myString__var){
 //ThingML send
 send(customPrintSType.instantiate(Print_port, CustomPrintMsgs_customPrintS_myString__var), Print_port);
-}
+//send to other clients
+for(IPIFStarter_PrintClient client : Print_clients){
+client.customPrintS_from_Print(CustomPrintMsgs_customPrintS_myString__var);
+}}
 
 private void sendCustomPrintI_via_Print(short CustomPrintMsgs_customPrintI_myInt__var){
 //ThingML send
 send(customPrintIType.instantiate(Print_port, CustomPrintMsgs_customPrintI_myInt__var), Print_port);
-}
+//send to other clients
+for(IPIFStarter_PrintClient client : Print_clients){
+client.customPrintI_from_Print(CustomPrintMsgs_customPrintI_myInt__var);
+}}
 
 //Attributes
 private final short PIFStarter_period__var;
@@ -159,7 +194,7 @@ sendCustomPrintS_via_Print((String) ("Sender entry Wait ... "));
 states_PIFStarter_behavior.add(state_PIFStarter_behavior_Wait);
 final List<Region> regions_PIFStarter_behavior = new ArrayList<Region>();
 final List<Handler> transitions_PIFStarter_behavior = new ArrayList<Handler>();
-transitions_PIFStarter_behavior.add(new Transition("Handler_452474",timer_timeoutType, timer_port, state_PIFStarter_behavior_Init, state_PIFStarter_behavior_Wait){
+transitions_PIFStarter_behavior.add(new Transition("Handler_29544944",timer_timeoutType, timer_port, state_PIFStarter_behavior_Init, state_PIFStarter_behavior_Wait){
 @Override
 public void doExecute(final Event e) {
 final Timer_timeoutMessageType.Timer_timeoutMessage ce = (Timer_timeoutMessageType.Timer_timeoutMessage) e;
@@ -168,7 +203,7 @@ sendPif_token_via_to_ender((short) (1));
 }
 
 });
-transitions_PIFStarter_behavior.add(new Transition("Handler_9611513",pif_tokenType, from_ender_port, state_PIFStarter_behavior_Wait, state_PIFStarter_behavior_Init){
+transitions_PIFStarter_behavior.add(new Transition("Handler_10374084",pif_tokenType, from_ender_port, state_PIFStarter_behavior_Wait, state_PIFStarter_behavior_Init){
 @Override
 public void doExecute(final Event e) {
 final Pif_tokenMessageType.Pif_tokenMessage ce = (Pif_tokenMessageType.Pif_tokenMessage) e;

@@ -10,6 +10,7 @@ package org.thingml.generated;
 import org.thingml.java.*;
 import org.thingml.java.ext.*;
 
+import org.thingml.generated.api.*;
 import org.thingml.generated.messages.*;
 
 import java.util.*;
@@ -17,12 +18,34 @@ import java.util.*;
 /**
  * Definition for type : TimerJava
  **/
-public class TimerJava extends Component  {
+public class TimerJava extends Component implements ITimerJava_timer {
+
+private Collection<ITimerJava_timerClient> timer_clients = Collections.synchronizedCollection(new LinkedList<ITimerJava_timerClient>());
+public synchronized void registerOnTimer(ITimerJava_timerClient client){
+timer_clients.add(client);
+}
+
+public synchronized void unregisterFromTimer(ITimerJava_timerClient client){
+timer_clients.remove(client);
+}
+
+@Override
+public synchronized void timer_start_via_timer(short TimerMsgs_timer_start_delay__var){
+receive(timer_startType.instantiate(timer_port, TimerMsgs_timer_start_delay__var), timer_port);
+}
+
+@Override
+public synchronized void timer_cancel_via_timer(){
+receive(timer_cancelType.instantiate(timer_port), timer_port);
+}
 
 private void sendTimer_timeout_via_timer(){
 //ThingML send
 send(timer_timeoutType.instantiate(timer_port), timer_port);
-}
+//send to other clients
+for(ITimerJava_timerClient client : timer_clients){
+client.timer_timeout_from_timer();
+}}
 
 //Attributes
 private Thread TimerJava_timer__var;

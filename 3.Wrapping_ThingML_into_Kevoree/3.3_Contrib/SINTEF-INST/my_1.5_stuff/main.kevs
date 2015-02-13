@@ -56,6 +56,55 @@ bind node0.JavaPIF.JavaPIF_ender_from_starterPort chan2
 start sync
 start node0
 
+****************************************************************************'
+
+
+repo "http://repo1.maven.org/maven2"
+repo "http://maven.thingml.org"
+
+//include standard Kevoree libraries
+include mvn:org.kevoree.library.java:org.kevoree.library.java.javaNode:release
+include mvn:org.kevoree.library.java:org.kevoree.library.java.channels:release
+include mvn:org.kevoree.library.java:org.kevoree.library.java.ws:release
+
+//include external libraries that may be needed by ThingML components
+
+//include Kevoree wrappers of ThingML components
+include mvn:org.thingml.generated:JavaPIF:1.0-SNAPSHOT
+
+
+//create a default Java node
+add node0 : JavaNode
+set node0.log = "false"
+//create a default group to manage the node(s)
+add sync : WSGroup
+set sync.port/node0 = "9000"
+set sync.master = "node0"
+attach node0 sync
+
+
+//instantiate Kevoree/ThingML components
+add node0.JavaPIF : KJavaPIF
+
+add chan1: SyncBroadcast
+//add chan1: WSChan
+//set chan1.host = "localhost"
+//set chan1.port = "9050"
+
+add chan2: SyncBroadcast 
+//add chan2: WSChan 
+//set chan2.host = "localhost"
+//set chan2.port = "9050"
+
+bind node0.JavaPIF.JavaPIF_starter_from_enderPort chan1
+bind node0.JavaPIF.JavaPIF_ender_to_starterPort_out chan1
+bind node0.JavaPIF.JavaPIF_starter_to_enderPort_out chan2
+bind node0.JavaPIF.JavaPIF_ender_from_starterPort chan2
+
+start sync
+//start node0
+
+
 
 
 
