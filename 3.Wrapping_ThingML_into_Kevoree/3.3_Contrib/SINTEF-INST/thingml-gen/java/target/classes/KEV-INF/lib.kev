@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org_kevoree:ContainerRoot xmlns:xsi="http://wwww.w3.org/2001/XMLSchema-instance" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org_kevoree="http://org.kevoree" generated_KMF_ID="214038191423811801242">
+<repositories xsi:type="org.kevoree:Repository" url="http://maven.thingml.org/thingml-release/">
+</repositories>
+<repositories xsi:type="org.kevoree:Repository" url="http://maven.thingml.org/thirdparty/">
+</repositories>
+<repositories xsi:type="org.kevoree:Repository" url="https://oss.sonatype.org/content/repositories/snapshots">
+</repositories>
+<repositories xsi:type="org.kevoree:Repository" url="http://maven.thingml.org/thingml-snapshot/">
+</repositories>
+<repositories xsi:type="org.kevoree:Repository" url="http://repo.maven.apache.org/maven2">
+</repositories>
+<packages xsi:type="org.kevoree:Package" name="com">
+<packages xsi:type="org.kevoree:Package" name="eclipsesource">
+<packages xsi:type="org.kevoree:Package" name="minimal-json">
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="minimal-json" version="0.9.1">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+</packages>
+</packages>
+</packages>
+<packages xsi:type="org.kevoree:Package" name="org">
+<packages xsi:type="org.kevoree:Package" name="kevoree">
+<packages xsi:type="org.kevoree:Package" name="kcl">
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="org.kevoree.kcl" version="20" requiredLibs="//@packages.1/@packages.0/@packages.1/@deployUnits.0">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+</packages>
+<packages xsi:type="org.kevoree:Package" name="log">
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="org.kevoree.log" version="1">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+</packages>
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="org.kevoree.api" version="5.2.5" requiredLibs="//@packages.1/@packages.0/@packages.0/@deployUnits.0 //@packages.1/@packages.0/@deployUnits.1 //@packages.1/@packages.1/@packages.0/@deployUnits.1">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="org.kevoree.model" version="5.2.5" requiredLibs="//@packages.1/@packages.1/@packages.0/@deployUnits.1">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="org.kevoree.annotation.api" version="5.2.5">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+</packages>
+<packages xsi:type="org.kevoree:Package" name="jetbrains">
+<packages xsi:type="org.kevoree:Package" name="kotlin">
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="kotlin-runtime" version="0.8.11">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="kotlin-stdlib" version="0.8.11" requiredLibs="//@packages.1/@packages.1/@packages.0/@deployUnits.0">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+</packages>
+</packages>
+<packages xsi:type="org.kevoree:Package" name="thingml">
+<packages xsi:type="org.kevoree:Package" name="generated">
+<packages xsi:type="org.kevoree:Package" name="kevoree">
+<typeDefinitions xsi:type="org.kevoree:ComponentType" name="KJavaPIF" abstract="false" version="1.0-SNAPSHOT" deployUnits="//@packages.1/@packages.2/@packages.0/@deployUnits.0">
+<metaData xsi:type="org.kevoree:Value" name="java.class" value="org.thingml.generated.kevoree.KJavaPIF">
+</metaData>
+<required xsi:type="org.kevoree:PortTypeRef" noDependency="false" name="JavaPIF_starter_to_enderPort_out" optional="true">
+</required>
+<required xsi:type="org.kevoree:PortTypeRef" noDependency="false" name="JavaPIF_ender_to_starterPort_out" optional="true">
+</required>
+<provided xsi:type="org.kevoree:PortTypeRef" noDependency="false" name="JavaPIF_ender_from_starterPort" optional="true">
+</provided>
+<provided xsi:type="org.kevoree:PortTypeRef" noDependency="false" name="JavaPIF_starter_from_enderPort" optional="true">
+</provided>
+</typeDefinitions>
+</packages>
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="JavaPIF" version="1.0-SNAPSHOT" requiredLibs="//@packages.0/@packages.0/@packages.0/@deployUnits.0 //@packages.1/@packages.2/@deployUnits.0 //@packages.1/@packages.0/@deployUnits.0 //@packages.1/@packages.0/@deployUnits.2">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+</packages>
+<deployUnits xsi:type="org.kevoree:DeployUnit" name="org.thingml.jasm" version="0.1.0-SNAPSHOT">
+<filters xsi:type="org.kevoree:Value" name="platform" value="java">
+</filters>
+</deployUnits>
+</packages>
+</packages>
+</org_kevoree:ContainerRoot>

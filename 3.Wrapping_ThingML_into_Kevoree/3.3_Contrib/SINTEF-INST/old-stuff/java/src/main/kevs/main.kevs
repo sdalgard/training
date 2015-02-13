@@ -1,0 +1,29 @@
+repo "http://repo1.maven.org/maven2"
+repo "http://maven.thingml.org"
+
+//include standard Kevoree libraries
+include mvn:org.kevoree.library.java:org.kevoree.library.java.javaNode:release
+include mvn:org.kevoree.library.java:org.kevoree.library.java.channels:release
+include mvn:org.kevoree.library.java:org.kevoree.library.java.ws:release
+
+//include external libraries that may be needed by ThingML components
+
+//include Kevoree wrappers of ThingML components
+include mvn:org.thingml.generated:JavaPIF:1.0-SNAPSHOT
+
+//create a default Java node
+add node0 : JavaNode
+set node0.log = "false"
+//create a default group to manage the node(s)
+add sync : WSGroup
+set sync.port/node0 = "9000"
+set sync.master = "node0"
+attach node0 sync
+
+//instantiate Kevoree/ThingML components
+add node0.JavaPIF : KJavaPIF
+start sync
+//start node0
+
+
+

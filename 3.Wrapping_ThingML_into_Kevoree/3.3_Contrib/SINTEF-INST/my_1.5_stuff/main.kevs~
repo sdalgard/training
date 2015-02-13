@@ -1,0 +1,12 @@
+// the nodes to host components
+add node0 : JavaNode
+
+// create and add your Sender components (named "sendX")
+add node0.thing : org.thingml.generated.Main/1.0-SNAPSHOT
+
+// add an instance of WSGroup named "sync"l
+add sync : WSGroup
+// attach your nodes to the WSGroup group
+set sync.master = 'node0'
+attach node0 sync
+
