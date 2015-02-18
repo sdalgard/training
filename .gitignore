@@ -3,3 +3,5 @@
 .deploy_units/
 node_modules/
 kevlib.json
+/1.ThingML_Basics/5.Contrib/My_Contrib/thingml-gen/java/JavaPIF/target/
+/1.ThingML_Basics/thingml-gen/java/JavaPIF/target/
